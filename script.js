@@ -206,53 +206,7 @@ const articles = [
   }
 ];
 
-const projectGrid = document.querySelector('#project-grid');
-const serviceList = document.querySelector('#service-list');
 const articleList = document.querySelector('#article-list');
-renderIntegrationRow(document.querySelector('#hero-integration-top'), [
-  'WhatsApp', 'Gmail', 'Outlook', 'Zapier', 'Google Sheets'
-]);
-renderIntegrationRow(document.querySelector('#hero-integration-bottom'), [
-  'Google Calendar', 'HubSpot', 'Slack', 'Google Drive', 'Airtable'
-]);
-
-function renderProjects() {
-  projectGrid.innerHTML = projects.map((project, index) => `
-    <article class="project-card">
-      <div class="project-preview ${project.preview}" role="img" aria-label="Illustrative workflow preview for ${project.title}">
-        <div class="preview-label">CONNECTED APP FLOW</div>
-        <div class="project-app-flow" aria-label="n8n connected to ${project.integrations.join(', ')}">
-          <div class="project-app-hub"><span class="n8n-mark" aria-hidden="true">n</span><b>n8n</b></div>
-          <span class="project-flow-line" aria-hidden="true"></span>
-          <div class="project-apps">
-            ${project.integrations.map((appName) => `<span class="project-app" aria-label="${appName}">${appIconMarkup(appName)}</span>`).join('')}
-          </div>
-        </div>
-      </div>
-      <div class="project-content">
-        <div class="project-meta"><span>${project.type}</span><span class="project-status">${project.status}</span></div>
-        <h3>${project.title}</h3>
-        <dl>
-          <div><dt>Problem</dt><dd>${project.problem}</dd></div>
-          <div><dt>Workflow</dt><dd>${project.solution}</dd></div>
-          <div><dt>Demo idea</dt><dd>${project.built}</dd></div>
-          <div><dt>Key steps</dt><dd>${project.features}</dd></div>
-        </dl>
-        <div class="tech-list" aria-label="Technologies used">${project.technologies.map((technology) => `<span>${technology}</span>`).join('')}</div>
-        <div class="project-links">
-          <a href="mailto:${contactEmail}?subject=${encodeURIComponent(`Demo idea: ${project.title}`)}&body=${encodeURIComponent(`Hi Watiti,\n\nI would like to discuss the ${project.title} workflow idea.\n\n`) }" aria-label="Ask Watiti about the ${project.title} workflow idea">Ask about this idea ↗</a>
-          <a href="#book" aria-label="Book a discovery call about ${project.title}">Discuss this workflow ↗</a>
-        </div>
-      </div>
-    </article>
-  `).join('');
-}
-
-function renderServices() {
-  serviceList.innerHTML = services.map((service, index) => `
-    <div class="service-item"><span class="service-number">${String(index + 1).padStart(2, '0')}</span><h3>${service}</h3><span class="service-arrow" aria-hidden="true">↗</span></div>
-  `).join('');
-}
 
 function renderArticles() {
   articleList.innerHTML = articles.map((article, index) => `
@@ -276,8 +230,6 @@ function renderArticles() {
   `).join('');
 }
 
-renderProjects();
-renderServices();
 renderArticles();
 document.querySelector('#current-year').textContent = new Date().getFullYear();
 
@@ -316,18 +268,4 @@ primaryNavigation.addEventListener('click', (event) => {
     menuToggle.setAttribute('aria-label', 'Open navigation');
     primaryNavigation.classList.remove('is-open');
   }
-});
-
-const contactForm = document.querySelector('#contact-form');
-const formFeedback = document.querySelector('#form-feedback');
-
-contactForm.addEventListener('submit', (event) => {
-  event.preventDefault();
-  if (!contactForm.reportValidity()) return;
-
-  const formData = new FormData(contactForm);
-  const subject = `Portfolio enquiry from ${formData.get('name')}`;
-  const body = `Name: ${formData.get('name')}\nEmail: ${formData.get('email')}\n\n${formData.get('message')}`;
-  formFeedback.textContent = 'Opening a pre-filled email draft. Review it, then press Send in your email app.';
-  window.location.href = `mailto:${contactEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 });
