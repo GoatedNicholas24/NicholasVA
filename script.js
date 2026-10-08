@@ -1,4 +1,35 @@
 const contactEmail = 'nicholaswatiti23@gmail.com';
+const appCatalog = {
+  'WhatsApp': { mark: 'wa', color: '#128c7e', name: 'WhatsApp' },
+  'Gmail': { mark: 'M', color: '#d14836', name: 'Gmail' },
+  'Outlook': { mark: 'O', color: '#0875c9', name: 'Outlook' },
+  'Zapier': { mark: 'Z', color: '#e87519', name: 'Zapier' },
+  'Google Sheets': { mark: '▦', color: '#16864a', name: 'Sheets' },
+  'Google Calendar': { mark: '31', color: '#3974d8', name: 'Calendar' },
+  'HubSpot': { mark: 'HS', color: '#ec6b37', name: 'HubSpot' },
+  'Slack': { mark: '#', color: '#6c4a9b', name: 'Slack' },
+  'Google Drive': { mark: 'D', color: '#17864a', name: 'Drive' },
+  'Airtable': { mark: 'A', color: '#d45b61', name: 'Airtable' },
+  'Google Forms': { mark: '≡', color: '#7550a2', name: 'Forms' },
+  'Trello': { mark: 'T', color: '#1769aa', name: 'Trello' },
+  'Instagram': { mark: '◎', color: '#c13584', name: 'Instagram' },
+  'Facebook': { mark: 'f', color: '#1877f2', name: 'Facebook' },
+  'WordPress': { mark: 'W', color: '#385878', name: 'WordPress' },
+  'OpenAI': { mark: 'AI', color: '#19806b', name: 'OpenAI' }
+};
+
+function appIconMarkup(appName) {
+  const app = appCatalog[appName];
+  if (!app) throw new Error(`Missing app icon definition for "${appName}".`);
+  return `<span class="app-icon" style="--app-color:${app.color}" aria-hidden="true">${app.mark}</span><span class="app-name">${app.name}</span>`;
+}
+
+function renderIntegrationRow(target, appNames) {
+  target.innerHTML = appNames.map((appName) => `
+    <span class="integration-app" aria-label="${appName}">${appIconMarkup(appName)}</span>
+  `).join('');
+}
+
 const projects = [
   {
     title: 'Instant Property Lead Response',
@@ -9,6 +40,7 @@ const projects = [
     solution: 'An n8n workflow captures a website lead, uses AI to summarize intent, and routes a draft response and lead details to the right agent.',
     built: 'A compelling demo should show the trigger, qualification rules, CRM handoff, and a human approval step before messages go out.',
     technologies: ['n8n', 'Forms / Webhooks', 'CRM', 'AI'],
+    integrations: ['WhatsApp', 'Gmail', 'Google Sheets', 'HubSpot', 'Google Calendar'],
     features: 'Instant lead capture, intent summary, agent assignment, response draft, and follow-up reminder.'
   },
   {
@@ -20,6 +52,7 @@ const projects = [
     solution: 'When a listing is ready, n8n turns approved property facts into channel-specific copy and sends drafts for review.',
     built: 'Show how one source of listing data becomes consistent, reviewable marketing assets without publishing unapproved claims.',
     technologies: ['n8n', 'Property data', 'AI', 'Approval step'],
+    integrations: ['Google Sheets', 'OpenAI', 'Gmail', 'Instagram', 'Facebook'],
     features: 'Listing intake, description drafts, channel variations, agent approval, and content handoff.'
   },
   {
@@ -31,6 +64,7 @@ const projects = [
     solution: 'An n8n flow records a viewing request, checks availability, sends a booking link, and prepares reminders and agent follow-up.',
     built: 'A demo can walk through the request, calendar handoff, confirmation, and rescheduling path.',
     technologies: ['n8n', 'Google Calendar', 'Email / messaging'],
+    integrations: ['Google Calendar', 'Outlook', 'WhatsApp', 'HubSpot', 'Gmail'],
     features: 'Request capture, calendar scheduling, confirmations, reminders, and CRM activity logging.'
   },
   {
@@ -42,6 +76,7 @@ const projects = [
     solution: 'A form-triggered workflow categorizes each request, flags urgent cases, and routes it to the property manager for assignment.',
     built: 'A demo should make the urgency rules and human handoff visible, rather than letting AI make safety-critical decisions alone.',
     technologies: ['n8n', 'Forms', 'AI classification', 'Task tracker'],
+    integrations: ['Google Forms', 'WhatsApp', 'Google Sheets', 'Trello', 'Slack'],
     features: 'Issue intake, urgency flags, manager review, contractor assignment, and tenant status updates.'
   }
 ];
@@ -174,17 +209,23 @@ const articles = [
 const projectGrid = document.querySelector('#project-grid');
 const serviceList = document.querySelector('#service-list');
 const articleList = document.querySelector('#article-list');
+renderIntegrationRow(document.querySelector('#hero-integration-top'), [
+  'WhatsApp', 'Gmail', 'Outlook', 'Zapier', 'Google Sheets'
+]);
+renderIntegrationRow(document.querySelector('#hero-integration-bottom'), [
+  'Google Calendar', 'HubSpot', 'Slack', 'Google Drive', 'Airtable'
+]);
 
 function renderProjects() {
   projectGrid.innerHTML = projects.map((project, index) => `
     <article class="project-card">
       <div class="project-preview ${project.preview}" role="img" aria-label="Illustrative workflow preview for ${project.title}">
-        <div class="preview-label">N8N WORKFLOW IDEA</div>
-        <div class="preview-window">
-          <div class="preview-bar"><i></i><i></i><i></i></div>
-          <div class="preview-body">
-            <div class="preview-lines"><span></span><span></span><span></span><span></span></div>
-            <div class="preview-chart"><i></i><i></i><i></i><i></i><i></i></div>
+        <div class="preview-label">CONNECTED APP FLOW</div>
+        <div class="project-app-flow" aria-label="n8n connected to ${project.integrations.join(', ')}">
+          <div class="project-app-hub"><span class="n8n-mark" aria-hidden="true">n</span><b>n8n</b></div>
+          <span class="project-flow-line" aria-hidden="true"></span>
+          <div class="project-apps">
+            ${project.integrations.map((appName) => `<span class="project-app" aria-label="${appName}">${appIconMarkup(appName)}</span>`).join('')}
           </div>
         </div>
       </div>
